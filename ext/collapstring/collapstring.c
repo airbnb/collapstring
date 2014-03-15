@@ -16,7 +16,8 @@ static VALUE collapstring_collapse(VALUE self, VALUE src_val)
         Check_Type(src_val, T_STRING);
 
         const char *src = RSTRING_PTR(src_val);
-        size_t src_len = RSTRING_LEN(src_val);
+        const size_t src_len = RSTRING_LEN(src_val);
+
         char *dst = alloca(src_len);
         size_t dst_idx = 0;
         collapse_state state = C_S_OUT;
