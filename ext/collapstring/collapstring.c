@@ -1,4 +1,3 @@
-#include <alloca.h>
 #include <assert.h>
 #include <ruby.h>
 
@@ -11,29 +10,28 @@ typedef enum {
         C_S_IN_DOUBLE_BACKSLASH,
 } collapse_state;
 
-static VALUE collapstring_collapse(VALUE self, VALUE src_val)
+static VALUE collapstring_collapse_bang(VALUE self, VALUE src)
 {
-        Check_Type(src_val, T_STRING);
+        Check_Type(src, T_STRING);
 
-        const char *src = RSTRING_PTR(src_val);
-        const size_t src_len = RSTRING_LEN(src_val);
+        char *str = RSTRING_PTR(src);
+        const size_t len = RSTRING_LEN(src);
 
-        char *dst = alloca(src_len);
         size_t dst_idx = 0;
         collapse_state state = C_S_OUT;
 
-        for (size_t src_idx = 0; src_idx < src_len; src_idx++) {
-                const char cur = src[src_idx];
+        for (size_t src_idx = 0; src_idx < len; src_idx++) {
+                const char cur = str[src_idx];
                 switch (cur) {
                 case '\"':
                         switch (state) {
                         case C_S_OUT:
-                                dst[dst_idx++] = cur;
+                                str[dst_idx++] = cur;
                                 state = C_S_IN_DOUBLE;
                                 break;
                         case C_S_OUT_BACKSLASH:
                         case C_S_IN_DOUBLE:
-                                dst[dst_idx++] = cur;
+                                str[dst_idx++] = cur;
                                 state = C_S_OUT;
                                 break;
                         case C_S_IN_DOUBLE_BACKSLASH:
@@ -49,12 +47,12 @@ static VALUE collapstring_collapse(VALUE self, VALUE src_val)
                 case '\'':
                         switch (state) {
                         case C_S_OUT:
-                                dst[dst_idx++] = cur;
+                                str[dst_idx++] = cur;
                                 state = C_S_IN_SINGLE;
                                 break;
                         case C_S_OUT_BACKSLASH:
                         case C_S_IN_SINGLE:
-                                dst[dst_idx++] = cur;
+                                str[dst_idx++] = cur;
                                 state = C_S_OUT;
                                 break;
                         case C_S_IN_SINGLE_BACKSLASH:
@@ -82,11 +80,11 @@ static VALUE collapstring_collapse(VALUE self, VALUE src_val)
                                 state = C_S_IN_DOUBLE;
                                 break;
                         case C_S_OUT:
-                                dst[dst_idx++] = cur;
+                                str[dst_idx++] = cur;
                                 state = C_S_OUT_BACKSLASH;
                                 break;
                         case C_S_OUT_BACKSLASH:
-                                dst[dst_idx++] = cur;
+                                str[dst_idx++] = cur;
                                 state = C_S_OUT;
                                 break;
                         }
@@ -100,10 +98,10 @@ static VALUE collapstring_collapse(VALUE self, VALUE src_val)
                                 state = C_S_IN_DOUBLE;
                                 break;
                         case C_S_OUT:
-                                dst[dst_idx++] = cur;
+                                str[dst_idx++] = cur;
                                 break;
                         case C_S_OUT_BACKSLASH:
-                                dst[dst_idx++] = cur;
+                                str[dst_idx++] = cur;
                                 state = C_S_OUT;
                                 break;
                         case C_S_IN_SINGLE:
@@ -112,12 +110,21 @@ static VALUE collapstring_collapse(VALUE self, VALUE src_val)
                         }
                 }
         }
-        return rb_str_new(dst, dst_idx);
+
+        return rb_str_resize(src, dst_idx);
+}
+
+static VALUE collapstring_collapse(VALUE self, VALUE src) {
+        VALUE dst = rb_obj_clone(src);
+        assert(dst);
+        collapstring_collapse_bang(self, dst);
+        return dst;
 }
 
 void Init_collapstring(void)
 {
         VALUE module = rb_define_module("Collapstring");
         assert(module);
+        rb_define_module_function(module, "collapse!", collapstring_collapse_bang, 1);
         rb_define_module_function(module, "collapse", collapstring_collapse, 1);
 }

@@ -50,6 +50,14 @@ class TestCollapstring < Test::Unit::TestCase
 
   def test_long_str
     long_str = 'a' * 1_000_000
+    assert_equal long_str, Collapstring.collapse!(long_str)
     assert_equal long_str, Collapstring.collapse(long_str)
+  end
+
+  def test_preserves_original_string
+    original = 'foo "bar" baz'
+    copy = original.dup
+    assert_equal 'foo "" baz', Collapstring.collapse(copy)
+    assert_equal original, copy
   end
 end

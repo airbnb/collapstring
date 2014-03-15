@@ -25,6 +25,7 @@ Or install it yourself as:
 
     require 'collapstring'
     Collapstring.collapse 'SELECT "hello \"world\"";'
+    Collapstring.collapse! 'SELECT "hello \"world\"";' # _could_ be in-place
 
 ## Contributing
 
