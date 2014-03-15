@@ -36,7 +36,9 @@ class TestCollapstring < Test::Unit::TestCase
     assert_equal %[""], Collapstring.collapse(%["a\\'b"])
 
     assert_equal %[a\\b], Collapstring.collapse(%[a\\b])
-
     assert_equal %[a\\\\b], Collapstring.collapse(%[a\\\\b])
+
+    assert_equal %[\\'], Collapstring.collapse(%[\\'])
+    assert_equal %[\\"], Collapstring.collapse(%[\\"])
   end
 end
