@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/airbnb/collapstring.png?branch=master)](https://travis-ci.org/airbnb/collapstring)
+
 # Collapstring
 
 Collapse quoted strings in strings. Does not support JRuby.

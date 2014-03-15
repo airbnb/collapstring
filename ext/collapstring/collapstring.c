@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <ruby.h>
+#include <stddef.h>
 
 typedef enum {
         C_S_OUT,
@@ -17,10 +18,10 @@ static VALUE collapstring_collapse_bang(VALUE self, VALUE src)
         char *str = RSTRING_PTR(src);
         const size_t len = RSTRING_LEN(src);
 
-        size_t dst_idx = 0;
+        size_t dst_idx = 0, src_idx = 0;
         collapse_state state = C_S_OUT;
 
-        for (size_t src_idx = 0; src_idx < len; src_idx++) {
+        for (; src_idx < len; src_idx++) {
                 const char cur = str[src_idx];
                 switch (cur) {
                 case '\"':
