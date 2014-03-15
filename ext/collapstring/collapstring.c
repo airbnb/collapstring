@@ -91,8 +91,24 @@ static VALUE collapstring_collapse(VALUE self, VALUE src_val)
                         }
                         break;
                 default:
-                        if (state == C_S_OUT || state == C_S_OUT_BACKSLASH)
+                        switch (state) {
+                        case C_S_IN_SINGLE_BACKSLASH:
+                                state = C_S_IN_SINGLE;
+                                break;
+                        case C_S_IN_DOUBLE_BACKSLASH:
+                                state = C_S_IN_DOUBLE;
+                                break;
+                        case C_S_OUT:
                                 dst[dst_idx++] = cur;
+                                break;
+                        case C_S_OUT_BACKSLASH:
+                                dst[dst_idx++] = cur;
+                                state = C_S_OUT;
+                                break;
+                        case C_S_IN_SINGLE:
+                        case C_S_IN_DOUBLE:
+                                break;
+                        }
                 }
         }
         return rb_str_new(dst, dst_idx);
