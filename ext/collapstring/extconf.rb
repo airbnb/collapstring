@@ -1,3 +1,3 @@
 require 'mkmf'
 
-create_makefile 'collapstring/collapstring'
+create_makefile 'collapstring'
