@@ -61,6 +61,7 @@ static VALUE collapstring_collapse(VALUE self, VALUE src_val)
                                 break;
                         case C_S_IN_DOUBLE_BACKSLASH:
                                 state = C_S_IN_DOUBLE;
+                                /* fallthrough */
                         case C_S_IN_DOUBLE:
                                 break;
                         }
