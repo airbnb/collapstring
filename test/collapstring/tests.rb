@@ -47,4 +47,9 @@ class TestCollapstring < Test::Unit::TestCase
     assert_equal %[\\a '], Collapstring.collapse(%[\\a '])
     assert_equal %[\\a "], Collapstring.collapse(%[\\a "])
   end
+
+  def test_long_str
+    long_str = 'a' * 1_000_000
+    assert_equal long_str, Collapstring.collapse(long_str)
+  end
 end
