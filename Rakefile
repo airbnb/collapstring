@@ -16,19 +16,8 @@ task :fuzz => :compile do |t|
   require 'collapstring'
 
   sizes = [10, 100, 1000, 10_000]
-  alphabet = [' ', '\'', '\"', '\\']
-
-  itr = 0
-
-  begin
-    loop do
-      string = sizes.sample.times.inject('') { |s| s << alphabet.sample }
-      Collapstring.collapse! string
-      putc '.'
-      itr += 1
-    end
-  rescue Interrupt
-    puts itr
+  loop do
+    puts Collapstring.collapse! Collapstring.fuzz(sizes.sample)
   end
 end
 

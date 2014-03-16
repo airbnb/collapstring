@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <ruby.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 typedef enum {
         C_S_OUT,
@@ -115,17 +116,33 @@ static VALUE collapstring_collapse_bang(VALUE self, VALUE src)
         return rb_str_resize(src, dst_idx);
 }
 
-static VALUE collapstring_collapse(VALUE self, VALUE src) {
+static VALUE collapstring_collapse(VALUE self, VALUE src)
+{
         VALUE dst = rb_obj_clone(src);
         assert(dst);
         collapstring_collapse_bang(self, dst);
         return dst;
 }
 
+static VALUE collapstring_fuzz(VALUE self, VALUE length)
+{
+        static char *chars = "\'\"\\ ";
+        Check_Type(length, T_FIXNUM);
+        int i, l = NUM2INT(length);
+        VALUE res = rb_str_new(NULL, 0);
+        assert(res);
+        for (i = 0; i < l; i++) {
+                res = rb_str_cat(res, chars + rand() % 4, 1);
+        }
+        return res;
+}
+
 void Init_collapstring(void)
 {
         VALUE module = rb_define_module("Collapstring");
         assert(module);
-        rb_define_module_function(module, "collapse!", collapstring_collapse_bang, 1);
+        rb_define_module_function(module, "collapse!",
+                                  collapstring_collapse_bang, 1);
         rb_define_module_function(module, "collapse", collapstring_collapse, 1);
+        rb_define_module_function(module, "fuzz", collapstring_fuzz, 1);
 }
