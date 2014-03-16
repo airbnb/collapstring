@@ -14,15 +14,16 @@ Rake::Task[:test].prerequisites.unshift :compile
 
 task :fuzz => :compile do |t|
   require 'collapstring'
-  require 'securerandom'
-  
+
   sizes = [10, 100, 1000, 10_000]
+  alphabet = [' ', '\'', '\"', '\\']
 
   itr = 0
 
   begin
     loop do
-      Collapstring.collapse! SecureRandom.random_bytes(sizes.sample)
+      string = sizes.sample.times.inject('') { |s| s << alphabet.sample }
+      Collapstring.collapse! string
       putc '.'
       itr += 1
     end
