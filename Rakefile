@@ -1,9 +1,15 @@
-require 'bundler/gem_tasks'
+lib = File.expand_path '../lib', __FILE__
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include? lib
+
 require 'rake/testtask'
 
-require 'rake/extensiontask'
-
-Rake::ExtensionTask.new 'collapstring'
+if RUBY_PLATFORM == 'java'
+  require 'rake/javaextensiontask'
+  Rake::JavaExtensionTask.new 'collapstring'
+else
+  require 'rake/extensiontask'
+  Rake::ExtensionTask.new 'collapstring'
+end
 
 Rake::TestTask.new do |t|
   t.libs = %w[lib test]
@@ -12,7 +18,7 @@ end
 
 Rake::Task[:test].prerequisites.unshift :compile
 
-task :fuzz => :compile do |t|
+task :fuzz => :compile do
   require 'collapstring'
 
   sizes = [10, 100, 1000, 10_000]
