@@ -2,7 +2,7 @@
 
 # Collapstring
 
-Collapse quoted strings in strings. Does not support JRuby.
+Collapse quoted strings in strings. Supports MRI, Rubinius & JRuby.
 
 ## Why?
 

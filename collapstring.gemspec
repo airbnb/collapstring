@@ -1,6 +1,4 @@
 # coding: utf-8
-lib = File.expand_path '../lib', __FILE__
-$LOAD_PATH.unshift lib unless $LOAD_PATH.include? lib
 
 Gem::Specification.new do |spec|
   spec.name          = 'collapstring'
@@ -12,14 +10,19 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/airbnb/collapstring'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files`.split $/
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename f }
-  spec.test_files    = spec.files.grep %r{^(test|spec|features)/}
-  spec.require_paths = %w[lib]
+  spec.files         = %w(LICENSE.txt README.md)
+  spec.test_files    = %w(test/collapstring/tests.rb)
+  spec.require_paths = %w(lib)
 
-  spec.extensions = %w[ext/collapstring/extconf.rb]
+  if RUBY_PLATFORM == 'java'
+    spec.platform    = 'java'
+    spec.files      << 'lib/collapstring.jar'
+  else
+    spec.files      += %w(ext/collapstring/extconf.rb ext/collapstring/collapstring.c)
+    spec.extensions  = %w(ext/collapstring/extconf.rb)
+  end
 
-  spec.add_development_dependency 'bundler', '~> 1.3'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rake-compiler'
+  spec.add_development_dependency 'bundler',       '~> 1.3'
+  spec.add_development_dependency 'rake',          '~> 10.3.2'
+  spec.add_development_dependency 'rake-compiler', '~> 0.9.2'
 end
