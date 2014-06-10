@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = 'collapstring'
-  spec.version       = '0.1.2'
+  spec.version       = '0.2.0'
   spec.authors       = ['Pierre Carrier']
   spec.email         = ['pierre@gcarrier.fr']
   spec.description   = 'Collapse quoted strings in strings'
@@ -23,6 +23,6 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_development_dependency 'bundler',       '~> 1.3'
-  spec.add_development_dependency 'rake',          '~> 10.3.2'
-  spec.add_development_dependency 'rake-compiler', '~> 0.9.2'
+  spec.add_development_dependency 'rake',          '~> 10.3'
+  spec.add_development_dependency 'rake-compiler', '~> 0.9'
 end
